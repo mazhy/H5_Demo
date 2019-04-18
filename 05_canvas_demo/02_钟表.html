@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>钟表</title>
+  <style type="text/css">
+    *{
+      margin:0;
+      padding:0;
+    }
+    html,body{
+      height: 100%;
+      overflow: hidden;
+    }
+    #clock{
+      position:absolute;
+      top:0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      margin: auto;
+      background: gray;
+    }
+  </style>
+  
+</head>
+<body>
+  <canvas id="clock" width="400" height="400"></canvas>
+</body>
+
+<script type="text/javascript">
+  window.onload = function () {
+    /** @type {HTMLCanvasElement} */
+    let clock = document.getElementById('clock')
+    
+    if(clock.getContext){
+      let ctx = clock.getContext('2d')
+      setInterval(() => {
+        ctx.clearRect(0,0,clock.width, clock.height)
+        move()
+      }, 1000);
+      move()
+      function move() {
+        let date = new Date()
+        let s = date.getSeconds()
+        let m = date.getMinutes() + s/ 60
+        let h = date.getHours() + m / 60
+        h = h > 12 ? h-12:h
+
+        // 将圆心移动到canvas中心
+        ctx.save()
+        ctx.lineWidth = 8;
+        ctx.strokeStyle = "black";
+        ctx.lineCap = "round";
+        ctx.translate(200,200)
+        // 将第四象限转为第一象限  就是圆心向上为x 圆心向右伪y
+        ctx.rotate(-90 * Math.PI / 180)
+        ctx.beginPath()
+        // 最外层圆盘
+        ctx.save()
+        ctx.strokeStyle = "#325FA2"
+        ctx.lineWidth = 8
+        ctx.beginPath()
+        ctx.arc(0,0,140,0,360*Math.PI/180)
+        ctx.stroke()
+        ctx.restore()
+
+        //时针刻度
+        ctx.save()
+        for(let i = 0; i < 12; i++) {
+          ctx.rotate(30 * Math.PI / 180)
+          ctx.beginPath()
+          ctx.moveTo(100,0)
+          ctx.lineTo(120,0)
+          ctx.stroke()
+        }
+        ctx.restore()
+
+        //分针刻度
+        ctx.save()
+        ctx.lineWidth = 4
+        for(let i = 0; i < 60; i++) {
+          if(i % 5 !== 0){
+            ctx.beginPath()
+            ctx.moveTo(117,0)
+            ctx.lineTo(120,0)
+            ctx.stroke()
+          }
+          ctx.rotate(6 * Math.PI / 180)
+        }
+        ctx.restore()
+        //时针
+        ctx.save()
+        ctx.lineWidth = 14
+        ctx.beginPath()
+        ctx.rotate(h * 30 * Math.PI / 180)
+        ctx.moveTo(-20,0)
+        ctx.lineTo(80,0)
+        ctx.stroke()
+        ctx.restore()
+        //分针
+        ctx.save()
+        ctx.lineWidth = 10
+        ctx.beginPath()
+        ctx.rotate(m * 6 * Math.PI / 180)
+        ctx.moveTo(-28,0)
+        ctx.lineTo(112,0)
+        ctx.stroke()
+        ctx.restore()
+        //秒针
+        ctx.save()
+        ctx.strokeStyle = "#D40000"
+        ctx.fillStyle = "#D40000"
+        ctx.lineWidth = 6
+        ctx.beginPath()
+        ctx.rotate(s * 6 * Math.PI / 180)
+        ctx.moveTo(-30,0)
+        ctx.lineTo(83,0)
+        ctx.stroke()
+          //底座
+          ctx.beginPath()
+          ctx.arc(0,0, 10,0 , 360 * Math.PI / 180)
+          ctx.fill()
+          // 秒针头
+          ctx.beginPath()
+          ctx.arc(96, 0 , 10, 0 , 360 * Math.PI / 180 )
+          ctx.stroke()
+        ctx.restore()
+        ctx.restore()
+      }
+    }
+  }
+</script>
+</html>
