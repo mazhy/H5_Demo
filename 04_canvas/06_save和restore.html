@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>save和restore</title>
+  <style type="text/css"> 
+    *{
+      margin: 0 ;
+      padding: 0;
+    }
+    html, body{
+      height: 1000%;
+      overflow: hidden;
+    }
+    body{
+      background: gray;
+    }
+    #test {
+      position:absolute;
+      top:0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      margin:auto;
+      background: pink;
+    }
+  </style>
+</head>
+<body>
+    <!-- 支持width height属性 -->
+    <canvas id="test" width="300px" height="300px"></canvas>
+  </body>
+  <script type="text/javascript">
+    window.onload = function() {
+      /** @type {HTMLCanvasElement} */
+      let canvasNode = document.querySelector('#test')
+      if(canvasNode.getContext) {
+        let ctx = canvasNode.getContext('2d')
+        // save 和 restore 类似于作用域的概念
+        // 包裹在他们之间的操作,只在他俩之间有效,不会影响到下一个画图
+        // 可以嵌套使用,类似堆栈
+        ctx.save()
+        //写样式
+        ctx.strokeStyle = "red"
+        ctx.beginPath()
+        //画图
+        ctx.moveTo(0,0)
+        ctx.lineTo(100,100)
+        ctx.stroke()
+        ctx.restore()
+
+        ctx.save()
+        //写样式
+        //ctx.strokeStyle = "red"
+        ctx.beginPath()
+        //画图
+        ctx.moveTo(100,100)
+        ctx.lineTo(200,200)
+        ctx.stroke()
+        ctx.restore()
+      }
+    }
+   
+  </script>
+</html>

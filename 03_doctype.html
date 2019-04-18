@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>doctype</title>
+</head>
+<body>
+  <!-- 第一行的doctype 告诉浏览器以什么标准解析 -->
+  <!-- 有doctype就是标准模式,没有就是怪异模式, 在上面写标签也是怪异模式 -->
+</body>
+<script type="text/javascript">
+  // 通过document.compatMode 确定目前是什么模式
+  console.log(document.compatMode)
+  // 在ie9 以上的浏览器中,三种模式在渲染方面几乎没有区别 
+  // 在 ie 7 8 9 理论上存在怪异模式, 实际上只有标准模式
+  // 在ie6 中标准模式和怪异模式渲染的区别很大
+  // 在ie6以下只有怪异模式
+</script>
+</html>
