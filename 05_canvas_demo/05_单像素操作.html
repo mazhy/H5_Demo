@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>单像素操作</title>
+  <style type="text/css"> 
+    *{
+      margin: 0 ;
+      padding: 0;
+    }
+    html, body{
+      height: 1000%;
+      overflow: hidden;
+    }
+    body{
+      background: pink;
+    }
+    #test {
+      position:absolute;
+      top:0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      margin:auto;
+      background: gray;
+    }
+  </style>
+</head>
+<body>
+    <!-- 支持width height属性 -->
+    <canvas id="test" width="300" height="300"></canvas>
+  </body>
+  <script type="text/javascript">
+    window.onload = function() {
+      /** @type {HTMLCanvasElement} */
+      let canvasNode = document.querySelector('#test')
+      if(canvasNode.getContext) {
+        let ctx = canvasNode.getContext('2d')
+        // 图片的宽度和高度
+        ctx.save()
+        ctx.fillStyle = "pink"
+        ctx.beginPath()
+        ctx.fillRect(50,50,100,100)
+        ctx.restore()
+        // width 为49 一行黑线
+        let imageData = ctx.getImageData(0,0,canvasNode.width,canvasNode.height)
+        // 获取指定坐标的像素点rgba
+        let color = getColor(50,50,imageData)
+        console.log(color)
+        // 设置指定坐标的像素点rgba
+        for(let i = 0; i < canvasNode.height; i++){
+          setColor(imageData,[0,0,0,255],49,i)
+        }
+        ctx.putImageData(imageData,0,0)
+        // 获取指定像素点信息
+        function getColor(x, y, imageData) {
+          let color = []
+          let data = imageData.data
+          let w = imageData.width
+          let h = imageData.height
+          color[0] = data[4 * (y * w + x)]
+          color[1] = data[4 * (y * w + x)+1]
+          color[2] = data[4 * (y * w + x)+2]
+          color[3] = data[4 * (y * w + x)+3]
+          return color
+        }
+
+        // 设置某个像素点的rgba
+        function setColor(imageData, color, x, y ) {
+          let data = imageData.data
+          let w = imageData.width
+          let h = imageData.height
+          data[4 * (y * w + x)] = color[0]
+          data[4 * (y * w + x)+1] = color[1]
+          data[4 * (y * w + x)+2] = color[2]
+          data[4 * (y * w + x)+3] = color[3]
+        }
+      }
+    }
+   
+  </script>
+</html>

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>lineCap</title>
+  <title>创建ImageData</title>
   <style type="text/css"> 
     *{
       margin: 0 ;
@@ -15,7 +15,7 @@
       overflow: hidden;
     }
     body{
-      background: gray;
+      background: pink;
     }
     #test {
       position:absolute;
@@ -24,13 +24,13 @@
       bottom: 0;
       left: 0;
       margin:auto;
-      background: pink;
+      background: gray;
     }
   </style>
 </head>
 <body>
     <!-- 支持width height属性 -->
-    <canvas id="test" width="300px" height="300px"></canvas>
+    <canvas id="test" width="300" height="300"></canvas>
   </body>
   <script type="text/javascript">
     window.onload = function() {
@@ -38,13 +38,16 @@
       let canvasNode = document.querySelector('#test')
       if(canvasNode.getContext) {
         let ctx = canvasNode.getContext('2d')
-        ctx.strokeStyle="red"
-        ctx.lineWidth = 20;
-        //  线的两端样式
-        ctx.lineCap = "round"
-        ctx.moveTo(50,50)
-        ctx.lineTo(100,100)
-        ctx.stroke()
+        // 图片的宽度和高度
+
+        ctx.fillStyle = "rgba(0,0,0,.3)"
+        ctx.fillRect(0,0,100,100)
+        let imgData = ctx.createImageData(100,100)
+        for(let i = 0; i < imgData.data.length;i++){
+          imgData.data[4 * i + 3] = 255
+        }
+        // 写入到容器中
+        ctx.putImageData(imgData,100,100)
       }
     }
    
