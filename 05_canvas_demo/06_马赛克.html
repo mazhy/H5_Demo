@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>单像素操作</title>
+  <style type="text/css"> 
+    *{
+      margin: 0 ;
+      padding: 0;
+    }
+    html, body{
+      height: 1000%;
+      overflow: hidden;
+    }
+    body{
+      background: pink;
+    }
+    #test {
+      position:absolute;
+      top:0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      margin:auto;
+      background: gray;
+    }
+  </style>
+</head>
+<body>
+    <!-- 支持width height属性 -->
+    <canvas id="test" ></canvas>
+  </body>
+  <script type="text/javascript">
+    window.onload = function() {
+      /** @type {HTMLCanvasElement} */
+      let canvas = document.querySelector('#test')
+      if(canvas.getContext) {
+        let ctx = canvas.getContext('2d')
+        // 读取一张图片
+        let img = new Image()
+        img.src = "../img/小牛.png"
+        img.onload = function() {
+          // 设置canvas画布大小
+          canvas.width = img.width * 2
+          canvas.height = img.height
+          draw()
+        }
+        function draw() {
+          ctx.drawImage(img,0,0)
+          let oldImg = ctx.getImageData(0,0,img.width,img.height)
+          let newImg = ctx.createImageData(img.width, img.height)
+          let size = 5
+          // 将整个画布分成一个一个的马赛克矩形
+          for(let i = 0; i < oldImg.width / size; i++) {
+            for(let j = 0; j < oldImg.height / size; j++){
+              // 每一个都是马赛克矩形,在每个矩形中随机获取一个像素点
+              let color = getColor(i * size + Math.floor(Math.random() * size),j * size + Math.floor(Math.random() * size),oldImg)
+              // 把马赛克矩形中每一个像素都设置成这个像素
+              for(let a = 0; a < size; a ++){
+                for(let b = 0; b < size; b++) {
+                  setColor(newImg, color,i * size + a, j * size + b)
+                }
+              }
+            }
+          }
+          ctx.clearRect(0,0,canvas.width,canvas.height);
+				  ctx.putImageData(newImg,0,0);
+        }
+        // 获取指定像素点信息
+        function getColor(x, y, imageData) {
+          let color = []
+          let data = imageData.data
+          let w = imageData.width
+          let h = imageData.height
+          color[0] = data[4 * (y * w + x)]
+          color[1] = data[4 * (y * w + x)+1]
+          color[2] = data[4 * (y * w + x)+2]
+          color[3] = data[4 * (y * w + x)+3]
+          return color
+        }
+
+        // 设置某个像素点的rgba
+        function setColor(imageData, color, x, y ) {
+          let data = imageData.data
+          let w = imageData.width
+          let h = imageData.height
+          data[4 * (y * w + x)] = color[0]
+          data[4 * (y * w + x)+1] = color[1]
+          data[4 * (y * w + x)+2] = color[2]
+          data[4 * (y * w + x)+3] = color[3]
+        }
+      }
+    }
+   
+  </script>
+</html>
