@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>刮刮卡</title>
+  <style type="text/css"> 
+    *{
+      margin: 0 ;
+      padding: 0;
+    }
+    html, body{
+      height: 100%;
+      overflow: hidden;
+    }
+    #wrap,ul,ul>li {
+      height: 100%;
+    }
+    canvas{
+      position:absolute;
+      top:0;
+      left:0;
+      transition: 1s;
+    }
+    ul>li{
+      background: url('../img/b.png');
+      background-size: 100% 100%;
+    }
+    
+    
+  </style>
+</head>
+<body>
+    <div id="wrap">
+      <canvas></canvas>
+      <ul>
+        <li></li>
+      </ul>
+    </div>
+  </body>
+  <script type="text/javascript">
+    window.onload = function() {
+      /** @type {HTMLCanvasElement} */
+      let canvas = document.querySelector('canvas')
+      if(canvas.getContext) {
+          let ctx = canvas.getContext('2d')
+          // 设置canvas为屏幕大小
+          canvas.width = document.documentElement.clientWidth
+          canvas.height = document.documentElement.clientHeight
+          // 设置上层刮刮卡
+          let img = new Image()
+          img.src = "../img/a.png"
+          img.onload = function() {
+            draw()
+          }
+          function draw() {
+            let flag = 0
+            ctx.drawImage(img,0,0,canvas.width,canvas.height)
+            //监听touch事件
+            canvas.addEventListener('touchstart', function(ev) {
+              //获取第一个手指
+              let touch = ev.changedTouches[0]
+              ev = ev || event
+              let x = touch.clientX - canvas.offsetLeft
+              let y = touch.clientY - canvas.offsetTop
+              //设置合成规则
+              ctx.globalCompositeOperation = "destination-out"
+              //设置样式
+              ctx.lineWidth = 20
+              ctx.lineCap = "round" //两头圆
+              ctx.lineJoin = "round" //  连接点圆
+              //开始画线
+              ctx.save()
+              ctx.beginPath()
+              ctx.moveTo(x,y)
+              ctx.lineTo(x+1,y+1)
+              ctx.stroke()
+              ctx.restore()
+            })
+
+            //监听移动事件
+            canvas.addEventListener("touchmove", function(ev) {
+              ev = ev || event
+              let touch = ev.changedTouches[0]
+              let x = touch.clientX - canvas.offsetLeft
+              let y = touch.clientY - canvas.offsetTop
+              ctx.save()
+              ctx.lineTo(x,y)
+              ctx.stroke()
+              ctx.restore()
+            })
+
+            //监听touch结束事件
+            canvas.addEventListener("touchend",function() {
+              //拿到所有像素点
+              let imgData = ctx.getImageData(0,0,canvas.width, canvas.height)
+              let allPx = imgData.width * imgData.height
+              for(let i= 0; i < allPx; i++){
+                if(imgData.data[4 * i + 3] === 0) {
+                  flag++
+                }
+              }
+              console.log(flag)
+              if(flag >= allPx/2){
+                canvas.style.opacity = 0
+              }
+            })
+            //当canvas的transition事件结束后删掉canvas元素
+            canvas.addEventListener("transitionend", function() {
+              this.remove()
+            })
+          }
+      }
+    }
+   
+  </script>
+</html>
