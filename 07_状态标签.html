@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>状态标签</title>
+</head>
+<body>
+  	<!-- meter:用来显示已知范围的标量值或者分数值。
+                value:当前的数值。
+                min:值域的最小边界值。如果设置了，它必须比最大值要小。如果没设置，默认为0
+                max:值域的上限边界值。如果设置了，它必须比最小值要大。如果没设置，默认为1
+                low:定义了低值区间的上限值,如果设置了，它必须比最小值属性大，并且不能超过high值和最大值。未设置或者比       最小值还要小时，其值即为最小值。
+                high:定义了高值区间的下限值。如果设置了，它必须小于最大值，同时必须大于low值和最小值。如果没有设置，或        者比最大值还大，其值即为最大值。
+                optimum:这个属性用来指示最优/最佳取值。 -->
+  <meter value="25" min="20" max="100" low="40" high="80" optimum="90"></meter>
+
+	<!-- progress:用来显示一项任务的完成进度
+          max:该属性描述了这个progress元素所表示的任务一共需要完成多少工作.
+          value：该属性用来指定该进度条已完成的工作量.
+              如果没有value属性,则该进度条的进度为"不确定",
+              也就是说,进度条不会显示任何进度,你无法估计当前的工作会在何时完成 -->
+  <progress max="100" value="50"></progress>
+</body>
+</html>

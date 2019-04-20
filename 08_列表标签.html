@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>列表标签</title>
+  <style>
+    input::-webkit-input-placeholder{
+      color:pink;
+    }
+  </style>
+</head>
+<body>
+  <input type="text" placeholder="你最喜欢的美食是什么呢?" list="food" style="width: 200px;">
+  <datalist id="food">
+    <option value="1">锅包肉</option>
+    <option value="2">红烧肉</option>
+    <option value="3">水煮肉</option>
+  </datalist>
+
+  <details open>
+    <summary>标题</summary>
+    <p>第一行</p>
+    <p>第二行</p>
+    <p>第三行</p>
+  </details>
+</body>
+</html>

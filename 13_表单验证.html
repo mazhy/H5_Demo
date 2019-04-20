@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>表单验证</title>
+</head>
+<body>
+    <form >
+        <input type="text" />
+        <!-- formnovalidate 关闭验证 -->
+        <input type="submit" formnovalidate="formnovalidate" value="提交"/>
+      </form>
+  
+</body>
+<script type="text/javascript">
+		
+  window.onload=function(){
+    var inputEl = document.querySelector("input");
+    var submit = document.querySelectorAll("input")[1];
+    submit.onclick=function(){
+      var val = inputEl.value;
+      if(val=="jzy"){
+        submit.setCustomValidity("请不要输入敏感词")
+      }else{
+        submit.setCustomValidity("")
+      }
+    }
+    submit.addEventListener("invalid",function(){
+      console.log(submit.validity)
+    })
+  }
+</script>
+
+</html>
