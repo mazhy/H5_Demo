@@ -46,6 +46,119 @@ if (canvas.getContext){
 } 
 ```	
 
+## 注意
++	canvas图像的渲染有别于html图像的渲染，
+	-	canvas的渲染极快，不会出现代码覆盖后延迟渲染的问题
+	-	写canvas代码一定要具有同步思想
++	在获取上下文时，一定要先判断
++	画布高宽的问题
+	-	画布默认高宽300*150
+	-	切记一定要使用html的attribute的形式来定义画布的宽高
+	-	通过css形式定义会缩放画布内的图像
++	绘制矩形的问题
+	-	边框宽度的问题，边框宽度是在偏移量上下分别渲染一半，可能会出现小数边框，一旦出现小数边框都会向上取整
+	-	canvas的api只支持一种图像的直接渲染：矩形
++	我们没法使用选择器来选到canvas中的图像
+
+## 画布API
++	oc.getContext("2d"):获取画布的2d上下文
++	oc.width:画布在横向上css像素的个数
++	oc.height:画布在纵向上css像素的个数
++	oc.toDataUrl():拿到画布的图片地址
+
+## 上下文API
++	ctx.fillRect(x,y,w,h):填充矩形
++	ctx.strokeRect(x,ymwmh):带边框的矩形
++	ctx.clearRect(0,0,oc.width,oc.height):清除整个画布
+	-	注意原点的位置
++	ctx.fillStyle
+	-	填充颜色
+	-	背景fillStyle的值可以是createPattern(image, repetition)返回的对象
+	-	线性渐变fillStyle的值可以是createLinearGradient(x1, y1, x2, y2))返回的对象
+		+	addColorStop(position, color)
+	-	径向渐变fillStyle的值可以是createRadialGradient(x1, y1, r1, x2, y2, r2)返回的对象
+		+	addColorStop(position, color)
++	ctx.strokeStyle:线条颜色
++	ctx.lineWidth：线条宽度
++	ctx.lineCap：线条两端的展现形式
++	ctx.lineJoin：线条连接处的展现形式
++	ctx.moveTo(x,y):将画笔抬起点到x，y处
++	ctx.lineTo(x,y):将画笔移到x，y处
++	ctx.rect(x,y,w,h)
++	ctx.arc(x,y,r,degS,degE,dir)
++	ctx.arcTo(x1,y1,x2,y2,r):2个坐标，一个半径
+	-	结合moveTo(x,y)方法使用，
+	-	x,y:起始点
+	-	x1,y1：控制点
+	-	x2,y2：结束点
++	ctx.quadraticCurveTo(x1,y1,x2,y2)
+	-	结合moveTo(x,y)方法使用，
+	-	x,y:起始点
+	-	x1,y1：控制点
+	-	x2,y2：结束点
+	-	必须经过起点和终点
++	ctx.bezierCurveTo(x1, y1, x2, y2, x3, y3)
+	-	结合moveTo(x,y)方法使用，
+	-	x,y:起始点
+	-	x1,y1：控制点
+	-	x2,y2：控制点
+	-	x3，y3：结束点
+	-	必须经过起点和终点
++	ctx.fill()
++	ctx.stroke()
++	ctx.beginpath():清除路径容器
++	ctx.closepath():闭合路径
+	-	fill自动闭合
+	-	stroke需要手动闭合
++	ctx.save()
+	-	将画布当前状态(样式相关 变换相关)压入到样式栈中
++	ctx.restore()
+	-	将样式栈中栈顶的元素弹到样式容器中
+	-	图像最终渲染依赖于样式容器
+			
++	ctx.translate(x,y):将原点按当前坐标轴位移x，y个单位
++	ctx.rotate(弧度):将坐标轴按顺时针方向进行旋转
++	ctx.scale(因子):
+	-	放大：放大画布，画布中的一个css像素所占据的物理面积变大，画布中包含的css像素的个数变少
+		+	画布中图像所包含的css像素的个数不变
+	-	缩小：缩小画布，画布中的一个css像素所占据的物理面积变小，画布中包含的css像素的个数变多
+		+	画布中图像所包含的css像素的个数不变
++	ctx.drawImage(img,x,y,w,h)
+			:在canvas中引入图片一定在图片加载完成之后再去操作
++	ctx.measureText("文本")
+			:返回一个持有文本渲染宽度的对象
++	ctx.fillText()
++	ctx.strokeText()
++	ctx.font
++	ctx.textAlign
++	ctx.textBaseline
+	-	shadowOffsetX = float
+	-	shadowOffsetY = float
+	-	shadowBlur = float
+	-	shadowColor = color(必需项)
++	ctx.getImageData(x,y,w,h)
+	-	ImageData对象
+		+	width：选中区域在横向上css像素的个数
+		+	height：选中区域在纵向上css像素的个数
+		+	data:数组:选中区域所有像素点的rgba信息，rgba的取值从0到255
++	ctx.putImageData(imgdata,x,y)
++	ctx.createImageData(w,h)
+	-	返回的是imgdata对象 默认像素点的信息是rgba(0,0,0,0)
++	ctx.globalAlpha
+	-	取值为0到1
++	ctx.globalCompositeOperation
+	-	source-over(默认值):源在上面,新的图像层级比较高
+	-	source-in  :只留下源与目标的重叠部分(源的那一部分)
+	-	source-out :只留下源超过目标的部分
+	-	source-atop:砍掉源溢出的部分
+			
+	-	destination-over:目标在上面,旧的图像层级比较高
+	-	destination-in:只留下源与目标的重叠部分(目标的那一部分)
+	-	destination-out:只留下目标超过源的部分
+	-	destination-atop:砍掉目标溢出的部分
++	ctx.ispointinpath(x,y)
+	-	x,y这个点是否在路径上
+				
 #	canvas绘制矩形
 +	HTML中的元素canvas只支持一种原生的图形绘制：矩形。所有其他的图形的绘制都至少需要生成一条路径
 
@@ -334,6 +447,7 @@ ctx.scale(.5,.5)
 ctx.beginPath()
 ctx.fillRect(50,50,100,100)
 ```
+
 ##		在canvas中插入图片(需要image对象)
 1.	canvas操作图片时，必须要等图片加载完才能操作
 2.	drawImage(image, x, y, width, height)
@@ -408,7 +522,17 @@ ctx.fillRect(0,0,300,300)
 		+	在指定的(x,y)位置填充指定的文本
 	-	strokeText(text, x, y)
 		+	在指定的(x,y)位置绘制文本边框
-			
+
+```js
+let ctx = canvasNode.getContext('2d')
+// 要写字体大小和字体
+ctx.font = "60px sans-serif"
+// 文本内容,和绘制点
+ctx.fillText("苏妲己", 50, 50)
+// 绘制边框
+ctx.strokeText("苏妲己", 200,100)
+```
+		
 ##		文本样式
 +	font = value
 	-	当前我们用来绘制文本的样式. 这个字符串使用和 CSS font 属性相同的语法. 
@@ -434,13 +558,30 @@ ctx.fillRect(0,0,300,300)
 	-	bottom
 		+	文本基线在文本块的底部。
 
+```js
+ctx.font = "60px sans-serif"
+ctx.textAlign = "left"
+ctx.textBaseline = "bottom"
+// 文本内容,和绘制点
+ctx.fillText("苏妲己", 50, 50)
+```
+
 ##		measureText
 +	measureText() 方法返回一个 TextMetrics 对象，包含关于文本尺寸的信息（例如文本的宽度）
 		
 ##		canvas中文本水平垂直居中
+```js
+if(canvasNode.getContext) {
+	let ctx = canvasNode.getContext('2d')
+	// 要写字体大小和字体
+	ctx.font = "60px sans-serif"
+	ctx.textBaseline = "middle"
+	var obj = ctx.measureText("姜子牙")
+	ctx.fillText("姜子牙", (canvasNode.width - obj.width) / 2, (canvasNode.height - 60)/2)
+}
+```
 	
-	
-##		阴影(文本阴影&盒模型阴影)
+##		阴影
 +	shadowOffsetX = float
 	-	shadowOffsetX 和 shadowOffsetY 用来设定阴影在 X 和 Y 轴的延伸距离，
 	-	它们默认都为 0。
@@ -451,7 +592,15 @@ ctx.fillRect(0,0,300,300)
 	-	shadowBlur 用于设定阴影的模糊程度，其数值并不跟像素数量挂钩，也不受变换矩阵的影响，默认为 0。
 +	shadowColor = color(必需项)
 	-	shadowColor 是标准的 CSS 颜色值，用于设定阴影颜色效果，默认是全透明的黑色。
-	
+
+```js
+ctx.font = "60px sans-serif"
+ctx.shadowOffsetX = 10
+ctx.shadowOffsetY = 10
+ctx.shadowBlur = 10
+ctx.shadowColor = "red"
+ctx.fillText("苏妲己", 50, 50)
+```
 #	在canvas中的像素操作
 +	到目前为止，我们尚未深入了解Canvas画布真实像素的原理，事实上，
 +	你可以直接通过ImageData对象操纵像素数据，直接读取或将数据数组写入该对象中
@@ -480,16 +629,136 @@ ctx.fillRect(0,0,300,300)
 +	putImageData()方法去对场景进行像素数据的写入。
 +	putImageData(myImageData, dx, dy)
 	+	dx和dy参数表示你希望在场景内左上角绘制的像素数据所得到的设备坐标
-		
+
+```js
+let ctx = canvasNode.getContext('2d')
+// 从原点开始横向100个像素点纵向100个像素点一共一万个
+let imgData = ctx.getImageData(0,0,100,100)
+// 包含 图片的width, height 和rgba信息data,是个数组,大小是像素点的四倍
+console.log(imgData)
+for(let i = 0; i < imgData.data.length; i ++){
+  imgData.data[i] = 134
+}
+// 写入到容器中
+ctx.putImageData(imgData,100,100)
+```		
 ##		创建一个ImageData对象
 +	ctx.createImageData(width, height);
 	-	width : ImageData 新对象的宽度。
 	-	height: ImageData 新对象的高度。
 +	默认创建出来的是透明的
 
+```js
+ctx.fillStyle = "rgba(0,0,0,.3)"
+ctx.fillRect(0,0,100,100)
+let imgData = ctx.createImageData(100,100)
+for(let i = 0; i < imgData.data.length;i++){
+  imgData.data[4 * i + 3] = 255
+}
+// 写入到容器中
+ctx.putImageData(imgData,100,100)
+```
 ##		操作单个像素（行与列）
+```js
+let ctx = canvasNode.getContext('2d')
+// 图片的宽度和高度
+ctx.save()
+ctx.fillStyle = "pink"
+ctx.beginPath()
+ctx.fillRect(50,50,100,100)
+ctx.restore()
+// width 为49 一行黑线
+let imageData = ctx.getImageData(0,0,canvasNode.width,canvasNode.height)
+// 获取指定坐标的像素点rgba
+let color = getColor(50,50,imageData)
+console.log(color)
+// 设置指定坐标的像素点rgba
+for(let i = 0; i < canvasNode.height; i++){
+	setColor(imageData,[0,0,0,255],49,i)
+}
+ctx.putImageData(imageData,0,0)
+// 获取指定像素点信息
+function getColor(x, y, imageData) {
+	let color = []
+	let data = imageData.data
+	let w = imageData.width
+	let h = imageData.height
+	color[0] = data[4 * (y * w + x)]
+	color[1] = data[4 * (y * w + x)+1]
+	color[2] = data[4 * (y * w + x)+2]
+	color[3] = data[4 * (y * w + x)+3]
+	return color
+}
 
+// 设置某个像素点的rgba
+function setColor(imageData, color, x, y ) {
+	let data = imageData.data
+	let w = imageData.width
+	let h = imageData.height
+	data[4 * (y * w + x)] = color[0]
+	data[4 * (y * w + x)+1] = color[1]
+	data[4 * (y * w + x)+2] = color[2]
+	data[4 * (y * w + x)+3] = color[3]
+} 
+```
 ##		马赛克
+```js
+// 读取一张图片
+let img = new Image()
+img.src = "../img/小牛.png"
+img.onload = function() {
+  // 设置canvas画布大小
+  canvas.width = img.width * 2
+  canvas.height = img.height
+  draw()
+}
+function draw() {
+  ctx.drawImage(img,0,0)
+  let oldImg = ctx.getImageData(0,0,img.width,img.height)
+  let newImg = ctx.createImageData(img.width, img.height)
+  let size = 5
+  // 将整个画布分成一个一个的马赛克矩形
+  for(let i = 0; i < oldImg.width / size; i++) {
+    for(let j = 0; j < oldImg.height / size; j++){
+      // 每一个都是马赛克矩形,在每个矩形中随机获取一个像素点
+      let color = getColor(i * size + Math.floor(Math.random() * size),j * size + 
+      									Math.floor(Math.random() * size),oldImg)
+      // 把马赛克矩形中每一个像素都设置成这个像素
+      for(let a = 0; a < size; a ++){
+        for(let b = 0; b < size; b++) {
+          setColor(newImg, color,i * size + a, j * size + b)
+        }
+      }
+    }
+  }
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.putImageData(newImg,0,0);
+}
+// 获取指定像素点信息
+function getColor(x, y, imageData) {
+  let color = []
+  let data = imageData.data
+  let w = imageData.width
+  let h = imageData.height
+  color[0] = data[4 * (y * w + x)]
+  color[1] = data[4 * (y * w + x)+1]
+  color[2] = data[4 * (y * w + x)+2]
+  color[3] = data[4 * (y * w + x)+3]
+  return color
+}
+
+// 设置某个像素点的rgba
+function setColor(imageData, color, x, y ) {
+  let data = imageData.data
+  let w = imageData.width
+  let h = imageData.height
+  data[4 * (y * w + x)] = color[0]
+  data[4 * (y * w + x)+1] = color[1]
+  data[4 * (y * w + x)+2] = color[2]
+  data[4 * (y * w + x)+3] = color[3]
+}
+}
+```
 	     
 #		全局透明度的设置
 +	globalAlpha = value
@@ -509,9 +778,109 @@ ctx.fillRect(0,0,300,300)
 	-	destination-in:只留下源与目标的重叠部分(目标的那一部分)
 	-	destination-out:只留下目标超过源的部分
 	-	destination-atop:砍掉目标溢出的部分
-		
+
+```js
+let ctx = canvasNode.getContext('2d')
+//  设置全局透明度
+ctx.globalAlpha = 0.5
+// 首先画两个矩形,并且有重叠的部分
+ctx.fillStyle = "pink"
+//先画的就是destination
+ctx.fillRect(50,50,100,100)
+// 在这个位置
+//ctx.globalCompositeOperation = "source-atop"
+ctx.globalCompositeOperation = "destination-atop"
+ctx.fillStyle= "yellowGreen"
+// 后创建的就是source
+ctx.fillRect(100,100,100,100)
+```	
+
+## 刮刮卡
+```js
+let canvas = document.querySelector('canvas')
+if(canvas.getContext) {
+  let ctx = canvas.getContext('2d')
+  // 设置canvas为屏幕大小
+  canvas.width = document.documentElement.clientWidth
+  canvas.height = document.documentElement.clientHeight
+  // 设置上层刮刮卡
+  let img = new Image()
+  img.src = "../img/a.png"
+  img.onload = function() {
+    draw()
+  }
+  function draw() {
+    let flag = 0
+    ctx.drawImage(img,0,0,canvas.width,canvas.height)
+    //监听touch事件
+    canvas.addEventListener('touchstart', function(ev) {
+      //获取第一个手指
+      let touch = ev.changedTouches[0]
+      ev = ev || event
+      let x = touch.clientX - canvas.offsetLeft
+      let y = touch.clientY - canvas.offsetTop
+      //设置合成规则
+      ctx.globalCompositeOperation = "destination-out"
+      //设置样式
+      ctx.lineWidth = 20
+      ctx.lineCap = "round" //两头圆
+      ctx.lineJoin = "round" //  连接点圆
+      //开始画线
+      ctx.save()
+      ctx.beginPath()
+      ctx.moveTo(x,y)
+      ctx.lineTo(x+1,y+1)
+      ctx.stroke()
+      ctx.restore()
+    })
+
+    //监听移动事件
+    canvas.addEventListener("touchmove", function(ev) {
+      ev = ev || event
+      let touch = ev.changedTouches[0]
+      let x = touch.clientX - canvas.offsetLeft
+      let y = touch.clientY - canvas.offsetTop
+      ctx.save()
+      ctx.lineTo(x,y)
+      ctx.stroke()
+      ctx.restore()
+    })
+
+    //监听touch结束事件
+    canvas.addEventListener("touchend",function() {
+      //拿到所有像素点
+      let imgData = ctx.getImageData(0,0,canvas.width, canvas.height)
+      let allPx = imgData.width * imgData.height
+      for(let i= 0; i < allPx; i++){
+        if(imgData.data[4 * i + 3] === 0) {
+          flag++
+        }
+      }
+      console.log(flag)
+      if(flag >= allPx/2){
+        canvas.style.opacity = 0
+      }
+    })
+    //当canvas的transition事件结束后删掉canvas元素
+    canvas.addEventListener("transitionend", function() {
+      this.remove()
+    })
+  }
+}
+```
 #		将画布导出为图像
 +	toDataURL(注意是canvas元素接口上的方法)
+
+```js
+let canvas = document.querySelector('canvas')
+if(canvas.getContext) {
+  let ctx = canvas.getContext('2d')
+  ctx.fillRect(0,0,100,100)22_
+  // 导出地址
+  let result = canvas.toDataURL()
+  console.log(result)
+}
+```
 	
 #		事件操作
 +	ctx.isPointInPath(x, y)
@@ -519,3 +888,20 @@ ctx.fillRect(0,0,300,300)
 		+	x:检测点的X坐标
 		+	y:检测点的Y坐标
 +	注意，此方法只作用于最新画出的canvas图像
+
+```js
+ctx.beginPath()
+ctx.arc(100,100,50,0, 360*Math.PI/180)
+ctx.fill()
+ctx.beginPath()
+ctx.arc(300,300,50,0,360*Math.PI/180)
+ctx.fill()
+canvas.onclick = function(ev) {
+	ev = ev|| event
+	var x = ev.clientX - canvas.offsetLeft
+	var y = ev.clientY - canvas.offsetTop
+	if(ctx.isPointInPath(x,y)) {
+	  alert(123)
+	}
+}
+```
